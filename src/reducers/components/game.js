@@ -10,7 +10,7 @@ import { fromJS } from 'immutable';
 
 const initialState = fromJS({
     gameState: fromJS.Map,
-    gameOutcome: ''
+    gameOutcome: GAME_STATES.ONGOING
 });
 
 export default function game(state = initialState, action) {

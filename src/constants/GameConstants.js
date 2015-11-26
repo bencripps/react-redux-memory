@@ -13,6 +13,11 @@ export const DIFFICULTY_LEVELS = {
     HARD: 52
 };
 
+export const NOTIFICATIONS = {
+    WON: 'You won :)',
+    LOST: 'Sorry, you lost ;('
+}
+
 export const GAME_STATES = {
     ONGOING: 'ONGOING',
     WON: 'WON',

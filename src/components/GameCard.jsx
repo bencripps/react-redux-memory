@@ -4,7 +4,7 @@ import store from '../store/store';
 import '../style/components/card.styl';
 import { prefix } from '../util/prefix';
 import { idSanitizer } from '../util/idSanitizer';
-import { CARD_STATE, SHOW_DELAY, ACTIVE_CLASS } from '../constants/GameConstants';
+import { CARD_STATE, SHOW_DELAY, ACTIVE_CLASS, GAME_STATES } from '../constants/GameConstants';
 import { moveOccured, matchOccurred, noMatchOccurred } from '../actions/CardActions';
 
 class GameCard extends Component {
@@ -77,9 +77,11 @@ class GameCard extends Component {
     }
 
     render() {
-        const { value, src, gameState, id, cards } = this.props;
+        const { value, src, gameState, id, cards, gameOutcome } = this.props;
         const cardState = this.getCurrentState(gameState, id);
-        const isSelected = cardState.state === CARD_STATE.SELECTED || cardState.state === CARD_STATE.MATCHED;
+        const isSelected = cardState.state === CARD_STATE.SELECTED 
+                            || cardState.state === CARD_STATE.MATCHED
+                            || gameOutcome === GAME_STATES.WON;
         const cardCount = cards ? cards.length : 0;
 
         const cardProps = {
@@ -105,7 +107,8 @@ class GameCard extends Component {
 function mapStateToProps(state) {
     return {
         cards: state.cards.get('deck'),
-        gameState: state.game.get('gameState')
+        gameState: state.game.get('gameState'),
+        gameOutcome: state.game.get('gameOutcome')
     };
 }
 
