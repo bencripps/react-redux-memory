@@ -4,7 +4,11 @@ import store from '../store/store';
 import '../style/components/card.styl';
 import { prefix } from '../util/prefix';
 import { idSanitizer } from '../util/idSanitizer';
-import { CARD_STATE, SHOW_DELAY, ACTIVE_CLASS, GAME_STATES } from '../constants/GameConstants';
+import { 
+    CARD_STATE,
+    SHOW_DELAY,
+    ACTIVE_CLASS,
+    GAME_STATES } from '../constants/GameConstants';
 import { moveOccured, matchOccurred, noMatchOccurred } from '../actions/CardActions';
 
 class GameCard extends Component {
@@ -21,14 +25,17 @@ class GameCard extends Component {
             return false;
         }
 
-        if (cardState.lastMove === idSanitizer(key)) {
-            console.log(gameState);
+        else if (cardState.lastMove === idSanitizer(key)) {
             store.dispatch(matchOccurred(key,  gameState.correctMatches, cardCount));
         }
 
         else if (cardState.moveCount === 1) {
             store.dispatch(moveOccured(key, CARD_STATE.SELECTED, cardState.moveCount));
-            setTimeout(store.dispatch.bind(this, noMatchOccurred(gameState, key)), SHOW_DELAY);
+
+            setTimeout(store.dispatch.bind(
+                this, 
+                noMatchOccurred(gameState, key, gameState.totalIncorrectMoves)
+            ), SHOW_DELAY);
         }
 
         else if (cardState.state === CARD_STATE.UNSELECTED) {
@@ -81,7 +88,8 @@ class GameCard extends Component {
         const cardState = this.getCurrentState(gameState, id);
         const isSelected = cardState.state === CARD_STATE.SELECTED 
                             || cardState.state === CARD_STATE.MATCHED
-                            || gameOutcome === GAME_STATES.WON;
+                            || gameOutcome === GAME_STATES.WON
+                            || gameOutcome === GAME_STATES.LOST
         const cardCount = cards ? cards.length : 0;
 
         const cardProps = {

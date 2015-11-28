@@ -1,4 +1,5 @@
-export const NUMBER_OF_WRONG_TURNS_ALLOWED = 5;
+export const NUMBER_OF_WRONG_TURNS_ALLOWED = 8;
+
 export const CSS_PREFIX = 'cripps-memory';
 
 export const CARD_STATE = {

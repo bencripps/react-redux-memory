@@ -8,12 +8,16 @@ import '../style/components/notification.styl';
 
 class Notification extends Component {
 
-    getOutcome(outcome) {
+    getOutcome(gameState, outcome) {
+
+        const guessTotal = gameState && gameState.totalIncorrectMoves 
+            ? gameState.totalIncorrectMoves : 0;
+
         if (outcome === GAME_STATES.ONGOING) {
             return {
                 type: GAME_STATES.ONGOING,
-                message: null,
-                hidden: true
+                message: `Incorrect Guesses: ${guessTotal}`,
+                hidden: false
             };
         }
 
@@ -35,8 +39,8 @@ class Notification extends Component {
     }
 
     render() {
-        const { gameOutcome } = this.props;
-        const outcome = this.getOutcome(gameOutcome);
+        const { gameOutcome, gameState } = this.props;
+        const outcome = this.getOutcome(gameState, gameOutcome);
         const notificationProps = {
             className: prefix('notification')
         };
@@ -53,7 +57,8 @@ class Notification extends Component {
 
 function mapStateToProps(state) {
     return {
-        gameOutcome: state.game.get('gameOutcome')
+        gameOutcome: state.game.get('gameOutcome'),
+        gameState: state.game.get('gameState')
     };
 }
 

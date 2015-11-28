@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run test",
     "build": "node ./node_modules/webpack/bin/webpack --pretty --config webpack.config.dev.js",
+    "prod": "node ./node_modules/webpack/bin/webpack --pretty --config webpack.config.prod.js",
     "hot": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server --hot --inline --pretty --config webpack.config.hot.js"
   },
   "author": "ben cripps",

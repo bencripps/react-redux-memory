@@ -44,6 +44,7 @@ export default function game(state = initialState, action) {
         return state.set('gameState',
             Object.assign({}, state.get('gameState'), {
                 moveCount: 0,
+                totalIncorrectMoves: action.incorrectMoves,
                 lastMove: null,
                 ...action.unmatched
             })
@@ -58,6 +59,7 @@ export default function game(state = initialState, action) {
         return state.set('gameOutcome', GAME_STATES.LOST);
 
     default:
+        
         return state;
     }
 }

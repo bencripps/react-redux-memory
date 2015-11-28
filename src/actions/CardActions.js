@@ -5,10 +5,11 @@ import {
     MATCH_OCCURRED,
     NO_MATCH_OCCURRED,
     SET_DIFFICULTY,
-    GAME_WON
+    GAME_WON,
+    GAME_LOST
 } from '../constants/ActionTypes';
 
-import { CARD_IMAGE_SOURCES, CARD_STATE } from '../constants/GameConstants';
+import { CARD_IMAGE_SOURCES, CARD_STATE, NUMBER_OF_WRONG_TURNS_ALLOWED } from '../constants/GameConstants';
 import { shuffle } from '../util/shuffle';
 import { idSanitizer } from '../util/idSanitizer';
 
@@ -48,8 +49,12 @@ export function setDifficulty(difficulty) {
     return { type: SET_DIFFICULTY, difficulty };
 }
 
-export function noMatchOccurred(currentState, key) {
+export function noMatchOccurred(currentState, key, incorrectTotal) {
     const unmatched = {};
+    const incorrectMoves = Number(incorrectTotal) ? incorrectTotal + 1 : 1;
+    const hasLost = () => {
+        return incorrectMoves === NUMBER_OF_WRONG_TURNS_ALLOWED;
+    };
 
     for (let k in currentState) {
         if (currentState[k] === CARD_STATE.SELECTED) {
@@ -61,5 +66,10 @@ export function noMatchOccurred(currentState, key) {
         unmatched[key] = CARD_STATE.UNSELECTED;
     }
 
-    return { type: NO_MATCH_OCCURRED, unmatched };
+    if (hasLost()) {
+        return { type: GAME_LOST };
+    }
+    else {
+        return { type: NO_MATCH_OCCURRED, unmatched, incorrectMoves};
+    }
 }
