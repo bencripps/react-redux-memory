@@ -1,4 +1,4 @@
-export const NUMBER_OF_WRONG_TURNS_ALLOWED = 8;
+export const NUMBER_OF_WRONG_TURNS_ALLOWED = 10;
 
 export const CSS_PREFIX = 'cripps-memory';
 
@@ -30,6 +30,8 @@ export const DEFAULT_DIFFICULTY = 'EASY';
 export const SHOW_DELAY = 1000;
 
 export const ACTIVE_CLASS = 'active';
+
+export const MATCHED_CLASS = 'matched';
 
 export const CARD_IMAGE_SOURCES = [
     { id: '10_of_clubs_0', src: '10_of_clubs.png' },

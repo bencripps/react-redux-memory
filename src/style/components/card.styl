@@ -6,12 +6,18 @@
 		display inline-block
 		margin 3px 10px 3px 10px
 		width 56px
+		transform scale(1)
+		transition-property all
+		transition-duration .2s
+		
+		&.matched 
+			transform scale(1.01)
 
 		span
 
 			img
 				width 70px
-				transition-property transform
+				transition-property all
 				transition-duration .2s
 				transform rotateY(180deg)
 				

@@ -8,6 +8,7 @@ import {
     CARD_STATE,
     SHOW_DELAY,
     ACTIVE_CLASS,
+    MATCHED_CLASS,
     GAME_STATES } from '../constants/GameConstants';
 import { moveOccured, matchOccurred, noMatchOccurred } from '../actions/CardActions';
 
@@ -16,14 +17,21 @@ class GameCard extends Component {
     static propTypes = {
         cards: PropTypes.array.isRequired,
         id: PropTypes.string.isRequired,
-        gameState: PropTypes.object
+        gameState: PropTypes.object,
+        value: PropTypes.string, 
+        src: PropTypes.string, 
+        gameState: PropTypes.object,
+        gameOutcome: PropTypes.string,
     }
 
     handleClick(key, cardState, gameState, cardCount) {
 
-        if (cardState.state === CARD_STATE.SELECTED || this.isMoveInProgress(gameState)) {
+        if (cardState.state === CARD_STATE.SELECTED 
+            || cardState.state === CARD_STATE.MATCHED
+            || this.isMoveInProgress(gameState)) {
             return false;
         }
+
 
         else if (cardState.lastMove === idSanitizer(key)) {
             store.dispatch(matchOccurred(key,  gameState.correctMatches, cardCount));
@@ -39,18 +47,30 @@ class GameCard extends Component {
         }
 
         else if (cardState.state === CARD_STATE.UNSELECTED) {
-            store.dispatch(moveOccured(key, CARD_STATE.SELECTED, this.incrementCounter(cardState.moveCount)));
+            store.dispatch(moveOccured(key, 
+                CARD_STATE.SELECTED, 
+                this.incrementCounter(cardState.moveCount))
+            );
         }
     }
 
     isMoveInProgress(gameState) {
+
         if (!gameState || !gameState.lastMove) {
             return false;
         }
 
         const id = idSanitizer(gameState.lastMove);
+        const totalSelected = Object.keys(gameState).filter((k) => gameState[k] === CARD_STATE.SELECTED);
 
-        return gameState[id] === CARD_STATE.SELECTED;
+        if (totalSelected.length === 2) {
+            return true;
+        }
+
+        else {
+            return gameState[id] === CARD_STATE.SELECTED;
+        }
+        
     }
 
     incrementCounter(currentCount) {
@@ -91,9 +111,10 @@ class GameCard extends Component {
                             || gameOutcome === GAME_STATES.WON
                             || gameOutcome === GAME_STATES.LOST
         const cardCount = cards ? cards.length : 0;
+        const cardClasses = cardState.state === CARD_STATE.MATCHED ? ['card', MATCHED_CLASS]: ['card'];
 
         const cardProps = {
-            className: prefix('card'),
+            className: prefix( ...cardClasses ),
             onClick: this.handleClick.bind(this, id, cardState, gameState, cardCount)
         };
 
